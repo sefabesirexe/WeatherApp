@@ -23,7 +23,7 @@ export default function WeatherCard({ daily }) {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Calendar color="rgba(255,255,255,0.7)" size={16} />
-        <Text style={styles.title}>5 günlük tahmin</Text>
+        <Text style={styles.title}>5 GÜNLÜK TAHMİN</Text>
       </View>
       
       {daily.time.slice(0, 5).map((time, index) => {
@@ -49,14 +49,20 @@ export default function WeatherCard({ daily }) {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 24, padding: 20, marginVertical: 16 },
+  container: { 
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 24, 
+    padding: 20, 
+    marginVertical: 16,
+    overflow: 'hidden'
+  },
   headerRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  title: { fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.7)', marginLeft: 8 },
+  title: { fontSize: 13, fontWeight: '600', color: 'rgba(255,255,255,0.7)', marginLeft: 8, letterSpacing: 1 },
   row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgba(255,255,255,0.1)' },
   iconContainer: { width: 40, alignItems: 'center' },
   dateContainer: { flex: 1, paddingLeft: 10 },
-  date: { color: 'white', fontSize: 16, fontWeight: '600' },
-  desc: { color: 'rgba(255,255,255,0.7)', fontSize: 15, fontWeight: '400' },
-  temp: { color: 'white', fontSize: 16, fontWeight: '600', textAlign: 'right' },
+  date: { color: 'white', fontSize: 17, fontWeight: '500' },
+  desc: { color: 'rgba(255,255,255,0.6)', fontSize: 15, fontWeight: '400' },
+  temp: { color: 'white', fontSize: 18, fontWeight: '600', textAlign: 'right' },
   tempMin: { color: 'rgba(255,255,255,0.5)', fontWeight: '400' }
 });

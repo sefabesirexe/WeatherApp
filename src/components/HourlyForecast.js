@@ -24,7 +24,7 @@ export default function HourlyForecast({ hourly }) {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Clock color="rgba(255,255,255,0.7)" size={16} />
-        <Text style={styles.title}>24-saatlik tahmin</Text>
+        <Text style={styles.title}>24-SAATLİK TAHMİN</Text>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll}>
         {hourly.time.slice(0, 24).map((time, index) => {
@@ -36,7 +36,7 @@ export default function HourlyForecast({ hourly }) {
             <View key={index} style={styles.item}>
               <Text style={styles.temp}>{Math.round(hourly.temperature_2m[index])}°</Text>
               <View style={styles.iconContainer}>{IconComponent(info.icon)}</View>
-              <Text style={styles.wind}>{hourly.wind_speed_10m[index]}km/s</Text>
+              <Text style={styles.wind}>{Math.round(hourly.wind_speed_10m[index])}km/s</Text>
               <Text style={styles.time}>{hourText}</Text>
             </View>
           );
@@ -47,13 +47,19 @@ export default function HourlyForecast({ hourly }) {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 24, padding: 20, marginVertical: 8 },
+  container: { 
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 24, 
+    padding: 20, 
+    marginVertical: 8,
+    overflow: 'hidden'
+  },
   headerRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  title: { fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.7)', marginLeft: 8 },
+  title: { fontSize: 13, fontWeight: '600', color: 'rgba(255,255,255,0.7)', marginLeft: 8, letterSpacing: 1 },
   scroll: { flexDirection: 'row' },
   item: { alignItems: 'center', marginRight: 24, width: 60 },
   temp: { color: 'white', fontSize: 18, fontWeight: '500', marginBottom: 8 },
   iconContainer: { marginVertical: 8 },
-  wind: { color: 'rgba(255,255,255,0.8)', fontSize: 12, marginBottom: 4 },
-  time: { color: 'rgba(255,255,255,0.6)', fontSize: 12 }
+  wind: { color: 'rgba(255,255,255,0.8)', fontSize: 12, marginBottom: 4, fontWeight: '500' },
+  time: { color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '500' }
 });

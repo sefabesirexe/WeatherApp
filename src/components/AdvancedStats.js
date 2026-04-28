@@ -26,22 +26,22 @@ export default function AdvancedStats({ current, daily }) {
       <View style={styles.row}>
         {/* Wind Box */}
         <View style={styles.box}>
-          <Text style={styles.boxTitle}>Rüzgar Yönü</Text>
+          <Text style={styles.boxTitle}>RÜZGAR YÖNÜ</Text>
           <Text style={styles.boxValue}>{windDir}</Text>
-          <Text style={styles.boxSub}>{current.wind_speed_10m || 0} km/s</Text>
+          <Text style={styles.boxSub}>{Math.round(current.wind_speed_10m || 0)} km/s</Text>
           <Compass color="rgba(255,255,255,0.2)" size={64} style={styles.bgIcon} />
         </View>
         
         {/* Sun Box */}
         <View style={styles.box}>
-          <Text style={styles.boxTitle}>Güneş</Text>
+          <Text style={styles.boxTitle}>GÜNEŞ</Text>
           <View style={styles.sunRow}>
             <Sun color="#fcd34d" size={20} />
-            <Text style={styles.sunText}>{sunrise} Gün doğumu</Text>
+            <Text style={styles.sunText}>{sunrise} Doğumu</Text>
           </View>
           <View style={styles.sunRow}>
             <Moon color="#fb923c" size={20} />
-            <Text style={styles.sunText}>{sunset} Gün batımı</Text>
+            <Text style={styles.sunText}>{sunset} Batımı</Text>
           </View>
         </View>
       </View>
@@ -76,15 +76,28 @@ export default function AdvancedStats({ current, daily }) {
 const styles = StyleSheet.create({
   container: { marginVertical: 8, marginBottom: 40 },
   row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
-  box: { flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 24, padding: 20, marginHorizontal: 4, overflow: 'hidden' },
-  boxTitle: { color: 'rgba(255,255,255,0.7)', fontSize: 14, fontWeight: '600', marginBottom: 12 },
+  box: { 
+    flex: 1, 
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 24, 
+    padding: 20, 
+    marginHorizontal: 4, 
+    overflow: 'hidden'
+  },
+  boxTitle: { color: 'rgba(255,255,255,0.7)', fontSize: 13, fontWeight: '600', marginBottom: 12, letterSpacing: 1 },
   boxValue: { color: 'white', fontSize: 20, fontWeight: 'bold' },
   boxSub: { color: 'white', fontSize: 16, fontWeight: '500', marginTop: 4 },
   bgIcon: { position: 'absolute', right: -10, bottom: -10 },
   sunRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 8 },
   sunText: { color: 'white', fontSize: 14, fontWeight: '500', marginLeft: 8 },
-  gridBox: { backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 24, padding: 20, marginHorizontal: 4 },
+  gridBox: { 
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 24, 
+    padding: 20, 
+    marginHorizontal: 4,
+    overflow: 'hidden'
+  },
   gridItem: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgba(255,255,255,0.1)' },
-  gridLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 16 },
+  gridLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 16, fontWeight: '500' },
   gridValue: { color: 'white', fontSize: 16, fontWeight: 'bold' }
 });

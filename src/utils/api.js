@@ -5,19 +5,50 @@ export const fetchWeather = async (lat, lon) => {
 };
 
 export const fetchAirQuality = async (lat, lon) => {
-  const url = `${process.env.EXPO_PUBLIC_AQI_API}?latitude=${lat}&longitude=${lon}&current=european_aqi`;
+  const url = `${process.env.EXPO_PUBLIC_AQI_API}?latitude=${lat}&longitude=${lon}&current=european_aqi&timezone=auto`;
   const response = await fetch(url);
   return await response.json();
 };
 
 export const searchCity = async (query) => {
-  const url = `${process.env.EXPO_PUBLIC_GEOCODING_API}?name=${encodeURIComponent(query)}&count=10&language=tr&format=json`;
-  const response = await fetch(url);
+  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=jsonv2&addressdetails=1&limit=10`;
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': 'WeatherApp-ReactNative',
+      'Accept-Language': 'tr'
+    }
+  });
   const data = await response.json();
-  if (data.results) {
-    return data.results.sort((a, b) => a.name.localeCompare(b.name));
+  if (data && data.length > 0) {
+    return data.map(item => ({
+      id: item.place_id.toString(),
+      name: item.name || item.display_name.split(',')[0],
+      country: item.address?.country || '',
+      latitude: parseFloat(item.lat),
+      longitude: parseFloat(item.lon)
+    }));
   }
   return [];
+};
+
+export const reverseGeocode = async (lat, lon) => {
+  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2&addressdetails=1`;
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'WeatherApp-ReactNative',
+        'Accept-Language': 'tr'
+      }
+    });
+    const data = await response.json();
+    if (data && data.address) {
+      // Return the most specific neighborhood/suburb/town name possible
+      return data.address.neighbourhood || data.address.suburb || data.address.village || data.address.town || data.address.city_district || data.address.city || 'Mevcut Konum';
+    }
+  } catch (error) {
+    console.error('Reverse geocode error:', error);
+  }
+  return 'Mevcut Konum';
 };
 
 export const generateAlerts = (weatherData) => {
@@ -26,36 +57,24 @@ export const generateAlerts = (weatherData) => {
   const wind = weatherData.current.wind_speed_10m;
   
   if (temp <= 3) {
-    return { type: 'Sarı Uyarı', message: 'Don için Sarı Uyarı: Gizli buzlanma tehlikesi.', color: '#f59e0b', icon: 'AlertTriangle' };
+    return { type: 'Yellow Warning', message: 'Frost Warning: Risk of hidden ice.', color: '#f59e0b', icon: 'AlertTriangle' };
   }
   if (temp >= 35) {
-    return { type: 'Turuncu Uyarı', message: 'Aşırı Sıcaklık Uyarısı: Güneş çarpması tehlikesi.', color: '#f97316', icon: 'AlertTriangle' };
+    return { type: 'Orange Warning', message: 'Extreme Heat Warning: Risk of sunstroke.', color: '#f97316', icon: 'AlertTriangle' };
   }
   if (wind >= 50) {
-    return { type: 'Kırmızı Uyarı', message: 'Fırtına için Kırmızı Uyarı: Şiddetli rüzgar tehlikesi.', color: '#ef4444', icon: 'AlertOctagon' };
+    return { type: 'Red Warning', message: 'Storm Warning: Risk of severe winds.', color: '#ef4444', icon: 'AlertOctagon' };
   }
   return null;
 };
 
-// Weather codes to icons / descriptions
 export const getWeatherInfo = (code) => {
-  const map = {
-    0: { desc: 'Açık', icon: 'Sun' },
-    1: { desc: 'Çoğunlukla Açık', icon: 'Sun' },
-    2: { desc: 'Parçalı Bulutlu', icon: 'CloudSun' },
-    3: { desc: 'Bulutlu', icon: 'Cloud' },
-    45: { desc: 'Sisli', icon: 'CloudFog' },
-    48: { desc: 'Kırağılı Sis', icon: 'CloudFog' },
-    51: { desc: 'Hafif Çiseleme', icon: 'CloudDrizzle' },
-    53: { desc: 'Orta Çiseleme', icon: 'CloudDrizzle' },
-    55: { desc: 'Şiddetli Çiseleme', icon: 'CloudDrizzle' },
-    61: { desc: 'Hafif Yağmur', icon: 'CloudRain' },
-    63: { desc: 'Orta Yağmur', icon: 'CloudRain' },
-    65: { desc: 'Şiddetli Yağmur', icon: 'CloudRain' },
-    71: { desc: 'Hafif Kar', icon: 'CloudSnow' },
-    73: { desc: 'Orta Kar', icon: 'CloudSnow' },
-    75: { desc: 'Şiddetli Kar', icon: 'CloudSnow' },
-    95: { desc: 'Gök Gürültülü Fırtına', icon: 'CloudLightning' },
-  };
-  return map[code] || { desc: 'Bilinmiyor', icon: 'Cloud' };
+  if (code <= 1) return { desc: 'Açık', icon: 'Sun' };
+  if (code <= 3) return { desc: 'Parçalı Bulutlu', icon: 'CloudSun' };
+  if (code >= 51 && code <= 67) return { desc: 'Yağmurlu', icon: 'CloudRain' };
+  if (code >= 71 && code <= 77) return { desc: 'Karlı', icon: 'CloudSnow' };
+  if (code >= 80 && code <= 82) return { desc: 'Sağanak', icon: 'CloudRain' };
+  if (code >= 95) return { desc: 'Fırtınalı', icon: 'CloudLightning' };
+  if (code === 45 || code === 48) return { desc: 'Sisli', icon: 'CloudFog' };
+  return { desc: 'Bulutlu', icon: 'Cloud' };
 };

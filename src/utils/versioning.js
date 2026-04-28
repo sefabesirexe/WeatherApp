@@ -1,6 +1,12 @@
-export const APP_VERSION = '0.0.7';
+export const APP_VERSION = '0.0.8';
 
 export const APP_LOGS = [
+  {
+    id: '8',
+    version: '0.0.8',
+    date: '2026-04-28 02:50',
+    message: 'Implemented Frutiger Aero glass aesthetic. Added multi-city horizontal swiping pagination. Integrated Nominatim hyper-local API. Upgraded background images to 4K.'
+  },
   {
     id: '7',
     version: '0.0.7',
